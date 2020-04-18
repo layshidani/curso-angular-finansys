@@ -435,3 +435,52 @@ export class CategoriesModule { }
 </div>
 ```
 </details>
+
+## Add CategoryList template
+
+<details>
+
+<summary>category-list.component.html</summary>
+
+```html
+<nav class="mb-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
+    <li class="breadcrumb-item active">Categorias</li>
+  </ol>
+</nav>
+
+<div class="row mb-4">
+  <div class="col-md">
+    <!-- pl = padding left -->
+    <h1 class="h2 border-left pl-2">Categorias</h1>
+  </div>
+    <a class="btn btn-success float-right" routerLink="new">+ Nova Categoria</a>
+  <div class="col-md">
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr class="bg-primary text-light">
+      <th>Categorias</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Lazer</strong>
+        <small>Cinema, parque, praia, etc.</small>
+      </td>
+      <td>
+        <!-- [routerLink] propertyBind para futuramente add valor da variável, atualmente colocamos entre '' p ficar como string pois ainda não temos a variável configurada -->
+        <a [routerLink]="['categoryID', 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <!-- futuramente o click será associado à função de excluir (click)="funcao" -->
+        <button class="btn btn-outline-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+</details>
