@@ -484,3 +484,44 @@ export class CategoriesModule { }
 </table>
 ```
 </details>
+
+## Criar class InMemoryDatabase
+
+1. Criar model **Category**: `app/shared/category.model.ts`
+
+  <details>
+    <summary>category.model.ts</summary>
+    ```ts
+    export class Category {
+    constructor(
+        public id?: number,
+        public name?: string,
+        public description?: string,
+      ){}
+    }
+    ```
+  </details>
+
+2. Criar InMemoryDatabase: `app/in-memory-database.ts`.
+
+  <details>
+    <summary>in-memory-database.ts</summary>
+    ```ts
+    import { InMemoryDbService } from "angular-in-memory-web-api";
+
+    import { Category } from './pages/categories/shared/category.model';
+
+    export class InMemoryDatabase implements InMemoryDbService {
+      createDb(){
+        const categories: Category[] = [
+          { id: 1, name: 'Moradia', description: 'Pagamentos de Contas da Casa' },
+          { id: 2, name: 'Saúde', description: 'Plano de Saúde e Remédios' },
+          { id: 3, name: 'Lazer', description: 'Cinema, parques, praia, etc' },
+          { id: 4, name: 'Salário', description: 'Recebimento de Salário'},
+          { id: 5, name: 'Freelas', description: 'Trabalhos como freelancer'}
+        ];
+        return { categories };
+      }
+    }
+    ```
+  </details>
