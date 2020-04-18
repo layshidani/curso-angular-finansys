@@ -319,7 +319,7 @@ const routes: Routes = [
     // add path categories, ou seja, quando o path da url for categories, será direcionado para o CategoriesModules
     path: 'categories',
     // caminho@nomeDoModulo
-    loadChildren: './pages/categories/categories.module@CategoriesModule'
+    loadChildren: () => import('./pages/categories/categories.module').then(m => m.CategoriesModule),
   }
 ];
 
@@ -397,3 +397,41 @@ export class CategoriesModule { }
 </details>
 
 ## Add barra de navegação
+
+<details>
+
+<summary>app.component.html</summary>
+
+```html
+<!-- change config to navbar-dark bg-primary e add mb-4 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" mb-4>
+  <!-- add router link -->
+  <a class="navbar-brand" routerLink="/">FINAN$YS</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <!-- removido class="nav-item active" -->
+      <li routerLinkActive="active">
+        <!-- add router link -->
+        <a class="nav-link" routerLink="/reports">Relatórios</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <!-- add router link -->
+        <a class="nav-link" routerLink="/entries">Lançamentos</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+       <!-- add router link -->
+        <a class="nav-link" routerLink="/categories">Categorias</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- add uma div class container para centralizar o conteúdo que vier da rota -->
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+```
+</details>
