@@ -651,3 +651,103 @@ export class AppModule { }
 ```
 
 </details>
+
+## Category-list Melhorias
+
+<details>
+
+<summary>category-list.component.html</summary>
+
+```html
+<nav class="mb-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
+    <li class="breadcrumb-item active">Categorias</li>
+  </ol>
+</nav>
+
+<div class="row mb-4">
+  <div class="col-md">
+    <!-- pl = padding left -->
+    <h1 class="h2 border-left pl-2">Categorias</h1>
+  </div>
+    <a class="btn btn-success float-right" routerLink="new">+ Nova Categoria</a>
+  <div class="col-md">
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr class="bg-primary text-light">
+      <th>Categorias</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- torna dinâmico com as info do banco de dados -->
+    <tr *ngFor="let category of categories">
+      <td>
+        <strong>{{ category.name }}</strong>
+        <br>
+        <small>{{ category.description }}</small>
+      </td>
+      <td>
+        <!-- [routerLink] propertyBind -->
+        <a [routerLink]="[ category.id, 'edit' ]" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <!-- add click -->
+        <button (click)="deleteCategory(category)" class="btn btn-outline-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+</details>
+
+
+<details>
+
+<summary>category-list.component.html</summary>
+
+```ts
+import { Component, OnInit } from '@angular/core';
+
+// add imports
+import { Category } from "../shared/category.model";
+import { CategoryService } from "../shared/category.service";
+
+@Component({
+  selector: 'app-category-list',
+  templateUrl: './category-list.component.html',
+  styleUrls: ['./category-list.component.css']
+})
+
+// implements
+export class CategoryListComponent implements OnInit {
+  categories: Category[] = [];
+
+  constructor(private categoryService: CategoryService) { }
+
+  ngOnInit(): void {
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories,
+      error => alert('Erro ao carregar a lista')
+    )
+  }
+
+  deleteCategory(category) {
+    const mustDelete = confirm('Deseja realmente excluir este item?');
+
+    if (mustDelete){
+      this.categoryService.delete(category.id).subscribe(
+        () => this.categories = this.categories.filter(element => element != category),
+        () => alert("Erro ao tentar excluir!")
+      )
+    }
+  }
+
+}
+
+```
+
+</details>

@@ -23,16 +23,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
+    <!-- torna dinâmico com as info do banco de dados -->
+    <tr *ngFor="let category of categories">
       <td>
-        <strong>Lazer</strong>
-        <small>Cinema, parque, praia, etc.</small>
+        <strong>{{ category.name }}</strong><br>
+        <small>{{ category.description }}</small>
       </td>
       <td>
-        <!-- [routerLink] propertyBind para futuramente add valor da variável, atualmente colocamos entre '' p ficar como string pois ainda não temos a variável configurada -->
-        <a [routerLink]="['categoryID', 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
-        <!-- futuramente o click será associado à função de excluir (click)="funcao" -->
-        <button class="btn btn-outline-danger btn-sm">Excluir</button>
+        <!-- [routerLink] propertyBind -->
+        <a [routerLink]="[ category.id, 'edit' ]" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <!-- add click -->
+        <button (click)="deleteCategory(category)" class="btn btn-outline-danger btn-sm">Excluir</button>
       </td>
     </tr>
   </tbody>
