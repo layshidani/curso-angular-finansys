@@ -444,7 +444,7 @@ export class CategoriesModule { }
 <summary>category-list.component.html</summary>
 
 ```html
-<nav class="mb-5">
+<nav class="mb-5 mt-5">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
     <li class="breadcrumb-item active">Categorias</li>
@@ -659,7 +659,7 @@ export class AppModule { }
 <summary>category-list.component.html</summary>
 
 ```html
-<nav class="mb-5">
+ mt-5">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
     <li class="breadcrumb-item active">Categorias</li>
