@@ -272,7 +272,7 @@ ng g m pages/categories --routing
           |_category-list.component.css
           |_category-list.component.ts
           |_category-list.component.spec.ts
-          
+
   ```
 
 * category form
@@ -298,7 +298,7 @@ ng g m pages/categories --routing
           |_category-form.component.css
           |_category-form.component.ts
           |_category-form.component.spec.ts
-          
+
   ```
 
 ### Configurar rotas
@@ -659,7 +659,7 @@ export class AppModule { }
 <summary>category-list.component.html</summary>
 
 ```html
- mt-5">
+ <nav class="mb-5 mt-5">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
     <li class="breadcrumb-item active">Categorias</li>
@@ -687,8 +687,7 @@ export class AppModule { }
     <!-- torna dinâmico com as info do banco de dados -->
     <tr *ngFor="let category of categories">
       <td>
-        <strong>{{ category.name }}</strong>
-        <br>
+        <strong>{{ category.name }}</strong><br>
         <small>{{ category.description }}</small>
       </td>
       <td>
@@ -707,7 +706,7 @@ export class AppModule { }
 
 <details>
 
-<summary>category-list.component.html</summary>
+<summary>category-list.component.ts</summary>
 
 ```ts
 import { Component, OnInit } from '@angular/core';
