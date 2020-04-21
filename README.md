@@ -750,3 +750,183 @@ export class CategoryListComponent implements OnInit {
 ```
 
 </details>
+
+## Category form
+
+<details>
+<summary>categories.module.ts</summary>
+
+```ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+// add import
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { CategoriesRoutingModule } from './categories-routing.module';
+import { CategoryListComponent } from './category-list/category-list.component';
+import { CategoryFormComponent } from './category-form/category-form.component';
+
+
+@NgModule({
+  declarations: [CategoryListComponent, CategoryFormComponent],
+  imports: [
+    CommonModule,
+    CategoriesRoutingModule,
+    // add import
+    ReactiveFormsModule,
+  ]
+})
+export class CategoriesModule { }
+```
+</details>
+
+<details>
+<summary>category-form.component.html</summary>
+
+```html
+<nav class="mb-5 mt-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a router-link="/">Home</a></li>
+    <li class="breadcrumb-item"><a router-link="/categories">Categorias</a></li>
+    <!-- add formulário de categoria -->
+    <li class="breadcrumb-item active">Formulário de categoria</li>
+  </ol>
+</nav>
+
+<div class="row mb-4">
+  <div class="col-md">
+    <!-- pl = padding left -->
+    <h1 class="h2 border-left pl-2">Formulário de categoria {{ currentAction }}</h1>
+  </div>
+    <a class="btn btn-light float-right" routerLink="/categories">
+     << Voltar
+    </a>
+  <div class="col-md">
+  </div>
+</div>
+
+<form [formGroup]="categoryForm">
+  <div class="card">
+    <div class="card-header">
+      Informações sobre a Categoria
+    </div>
+
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="name">Nome</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+
+        <div class="form-group col-md-8">
+          <label for="description">Descrição</label>
+          <input type="text" class="form-control" id="description">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>
+
+</form>
+```
+</details>
+
+<details>
+<summary>category-form.component.ts</summary>
+
+```ts
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, AfterContentChecked } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs/operators';
+
+import toastr from 'toastr';
+
+import { Category } from './../shared/category.model';
+import { CategoryService } from './../shared/category.service';
+
+@Component({
+  selector: 'app-category-form',
+  templateUrl: './category-form.component.html',
+  styleUrls: ['./category-form.component.css']
+})
+export class CategoryFormComponent implements OnInit, AfterContentChecked {
+
+  // editando ou criando novo recurso (new ou edit):
+  currentAction: string;
+  // formulário de categorias, referenciar também no form html:
+  categoryForm: FormGroup;
+  // Título da página (new ou edit):
+  pageTitle: string;
+  // msgs de erro
+  serverErrorMessages: string[] = null;
+  // desabilitar o botão de enviar após click p/ impedir que seja clicado várias vezes
+  submittingForm: boolean = false;
+  // categoria
+  category: Category = new Category();
+
+  // injetar serviços no construtor
+  constructor(
+    private categoryService: CategoryService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder,
+  ) { }
+
+  ngOnInit(): void {
+    this.setCurrentAction();
+    this.buildCategoryForm();
+    this.loadCategory();
+  }
+
+  ngAfterContentChecked() {
+    this.setPageTitle();
+  }
+
+  private setCurrentAction() {
+    // this.route.snapshot.url -> gera um array com info da url
+
+    if (this.route.snapshot.url[0].path = 'new') {
+      this.currentAction = 'new';
+    } else {
+      this.currentAction = 'edit';
+    }
+  }
+
+  private buildCategoryForm() {
+    this.categoryForm = this.formBuilder.group({
+      id: [ null ],
+      name: [ null, [ Validators.required, Validators.minLength(2) ]],
+      description: [ null ],
+    })
+  }
+
+  private loadCategory() {
+    if (this.currentAction == 'edit') {
+
+      this.route.paramMap.pipe(
+        switchMap(params => this.categoryService.getById(+params.get('id')))
+      )
+      .subscribe(
+        (category) => {
+          this.category = category;
+          this.categoryForm.patchValue(category) // binds loaded category data to CategoryForm
+        },
+        (error) => alert('Ocorreu um erro no servidor, tente mais tarde.')
+      )
+    }
+  }
+
+
+  private setPageTitle() {
+    if (this.currentAction == 'new') {
+      this.pageTitle = 'Cadastro de Nova Categoria'
+    } else {
+      const categoryName = this.category.name || ''
+      this.pageTitle = 'Editando Categoria: ' + categoryName;
+    }
+  }
+}
+```
+</details>
