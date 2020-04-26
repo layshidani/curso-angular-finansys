@@ -13,7 +13,6 @@ import { CategoryFormComponent } from './category-form/category-form.component';
   imports: [
     CommonModule,
     CategoriesRoutingModule,
-    // add import
     ReactiveFormsModule,
   ]
 })
