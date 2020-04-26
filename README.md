@@ -930,3 +930,9 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 }
 ```
 </details>
+
+## Add módulo de lançamentos
+
+```$
+ng g m pages/entries --routing
+```
