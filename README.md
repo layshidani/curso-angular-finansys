@@ -234,6 +234,8 @@ angular.json:
 
 ---
 
+# Notas
+
 ## Criando o módulo de categorias
 
 ## Módulo categories
@@ -309,3 +311,46 @@ ng g m pages/categories --routing
 - `site.com/categories` => list (master)
 - `site.com/categories/:id/edit` => form (details) editar
 - `site.com/categories/new` => form (details) criar
+
+
+## Aula 35: Associação Category/Entry
+
+Aqui precisamos associar a categoria ao lançamento, pois nossa base de dados não faz isso automaticamente e não é configurável para isso.
+
+Dependendo da API que utilizamos, pode ser configurável já trazer a categoria associada ao lançamento.
+
+Então não seria necessário fazer essa ligação.
+
+* antes de fazermos a associação:
+  ```JSON
+  {
+    "id":1,
+    "name":"Gás de Cozinha",
+    "description":"Qualquer descrição para essa despesa",
+    "type":"expense",
+    "date":"14/10/2018",
+    "paid":true,
+    "amount":"70,80",
+    "category": undefined,
+    "categoryId":1
+  }
+  ```
+
+* a associação que precisamos:
+  ```JSON
+  {
+    "id":1,
+    "name":"Gás de Cozinha",
+    "description":"Qualquer descrição para essa despesa",
+    "type":"expense",
+    "date":"14/10/2018",
+    "paid":true,
+    "amount":"70,80",
+    "category": {
+      "id":1,
+      "name":"Moradia",
+      "description":"Pagamentos de Contas da Casa"
+    },
+    "categoryId":1
+  }
+  ```
