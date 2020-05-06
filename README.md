@@ -354,3 +354,61 @@ Então não seria necessário fazer essa ligação.
     "categoryId":1
   }
   ```
+
+## Refactor
+
+```
+app
+  |_core
+    |_components
+    |_guards
+    |_services
+    |_core.module.ts
+  |_pages
+      |_categories
+        |_category-list
+          |_category-list.component.html
+          |_category-list.component.css
+          |_category-list.component.ts
+          |_category-list.component.spec.ts
+        |_category-form
+          |_category-form.component.html
+          |_category-form.component.css
+          |_category-form.component.ts
+          |_category-form.component.spec.ts
+        |_shared
+          |_category-model.ts
+          |_category.service.ts
+          |_category.service.spec.ts
+        |_categories-routing.module.ts
+        |_categories.module.ts
+      |_entrie
+        |_entry-list
+          |_entry-list.component.html
+          |_entry-list.component.css
+          |_entry-list.component.ts
+          |_entry-list.component.spec.ts
+        |_entry-form
+          |_entry-form.component.html
+          |_entry-form.component.css
+          |_entry-form.component.ts
+          |_entry-form.component.spec.ts
+        |_shared
+          |_entry-model.ts
+          |_entry.service.ts
+          |_entry.service.spec.ts
+        |_entrie-routing.module.ts
+        |_entrie.module.ts
+  |_shared
+    |_components
+    |_modules
+    |_shared.module.ts
+  |_app-routing.module.ts
+  |_app.component.html
+  |_app.component.css
+  |_app.component.ts
+  |_app.component.spec.ts
+  |_app.module.ts
+  |_in-memory-database.ts
+
+```
