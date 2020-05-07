@@ -412,3 +412,39 @@ app
   |_in-memory-database.ts
 
 ```
+
+## Base Resource
+
+```
+|_app
+  |_shared
+    |_models
+      |_base-resource.model.ts
+```
+
+### Anotações
+
+```ts
+// abstract -> classes que não são extanciadas
+// ou seja, nao se pode fzr new BaseResourceModel
+export abstract class BaseResourceModel {
+  constructor(
+    public id?: number,
+    public name?: string,
+    public description?: string,
+  ) { }
+}
+```
+
+```ts
+export class Category extends BaseResourceModel {
+  constructor(
+    public id?: number,
+    public name?: string,
+    public description?: string,
+  ) {
+    // chama o construtor da classe base de onde é extendido (BaseResourceModel)
+    super();
+  }
+}
+```
