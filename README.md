@@ -355,6 +355,33 @@ Então não seria necessário fazer essa ligação.
   }
   ```
 
+## Entry service
+
+```ts
+  create(entry: Entry): Observable<Entry> {
+    // Aqui precisamos associar a categoria ao lançamento, pois nossa base de dados não faz isso automaticamente e não é configurável para isso.
+    // Dependendo da API que utilizamos, pode ser configurável já trazer a categoria associada ao lançamento, e
+    // então não seria necessário fazer essa ligação.
+
+    // utilizamos o flatMap para 'achatar' as 2 observables em uma só
+    // caso contrário teríamos Observable<Observable<Entry>>
+
+    // Observable
+    return this.categoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category;
+
+        // Observale<Entry>
+        return this.http.post(this.apiPath, entry).pipe(
+          catchError(this.handleError),
+          map(this.jsonDataToEntry)
+        )
+      })
+    );
+  }
+
+```
+
 ## Refactor
 
 ```
@@ -420,6 +447,8 @@ app
   |_shared
     |_models
       |_base-resource.model.ts
+    |_service
+      |_base-resource.service.ts
 ```
 
 ### Anotações
@@ -447,4 +476,93 @@ export class Category extends BaseResourceModel {
     super();
   }
 }
+```
+
+```ts
+// abstract, pois ela não será estanciada, é uma classe apenas de base
+export abstract class BaseResourceService<T extends BaseResourceModel> {
+
+```
+
+`protected`: mantém visível para a classe base e todas as classes que herdarem da classe base
+`private`: só é visível na classe base
+
+
+### Super()
+
+Compartilhamos o construtor da classe base.
+
+Na classe base temos o construtor
+
+```ts
+export abstract class BaseResourceService<T extends BaseResourceModel> {
+
+  protected http: HttpClient;
+
+  constructor(
+    protected apiPath: string,
+    protected injector: Injector,
+    // quando passamos uma função sem (), estamos apenas declarando-a, mas não invocando-a
+    protected jsonDataToResourceFn: (jsonData: any) => T
+  ) {
+    this.http = injector.get(HttpClient);
+  }
+
+// ...
+```
+
+Na classe EntryService, dizemos que ela 'extende' da classe base.
+
+então podemos passar um `super` indicando que os argumentos a serem passados para o construtor da classe base.
+
+```ts
+export class EntryService extends BaseResourceService<Entry> {
+
+  constructor(
+    protected injector: Injector,
+    private categoryService: CategoryService,
+    ) {
+    super('api/entries', injector, Entry.fromJson);
+  }
+
+// ...
+```
+
+Também podemos utilizar métodos que estão na classe base.
+
+```ts
+create(entry: Entry): Observable<Entry> {
+    return this.categoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category;
+
+        // super.create() -> utiliza o método create da classe base
+        return super.create(entry);
+      })
+    );
+  }
+```
+
+----
+
+usa o `bind(this)` para indicar que o `this` da classe EntryService deve ser utilizado ao invés do `this` do `flatMap` do `setCategoryAndSendToServer`.
+
+```ts
+create(entry: Entry): Observable<Entry> {
+    return this.setCategoryAndSendToServer(entry, super.create.bind(this));
+  }
+
+  update(entry: Entry): Observable<Entry> {
+    return this.setCategoryAndSendToServer(entry, super.update.bind(this))
+  }
+
+  private setCategoryAndSendToServer(entry: Entry, sendFn: any): Observable<Entry> {
+    return this.categoryService.getById(entry.categoryId).pipe(
+      flatMap(category => {
+        entry.category = category;
+        return sendFn(entry)
+      }),
+      catchError(this.handleError)
+    );
+  }
 ```
