@@ -9,4 +9,8 @@ export class Category extends BaseResourceModel {
     // chama o construtor da classe base (BaseResourceModel)
     super();
   }
+
+  static fromJson(jsonData: any): Category {
+    return Object.assign(new Category(), jsonData);
+  }
 }
