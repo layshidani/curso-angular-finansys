@@ -1,35 +1,96 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
+import { Validators } from '@angular/forms';
 
-import { Entry } from "../shared/entry.model";
-import { EntryService } from "../shared/entry.service";
+import { BaseResourceFormComponent } from '../../../shared/components/base-resource-form/base-resource-form.component'
+
+import { Entry } from '../shared/entry.model';
+import { EntryService } from '../shared/entry.service';
+
+import { Category } from '../../categories/shared/category.model';
+import { CategoryService } from '../../categories/shared/category.service';
 
 @Component({
-  selector: 'app-entry-list',
-  templateUrl: './entry-list.component.html',
-  styleUrls: ['./entry-list.component.css']
+  selector: 'app-entry-form',
+  templateUrl: './entry-form.component.html',
+  styleUrls: ['./entry-form.component.css']
 })
-export class EntryListComponent implements OnInit {
-  entries: Entry[] = [];
+export class EntryFormComponent extends BaseResourceFormComponent<Entry> implements OnInit {
 
-  constructor(private entryService: EntryService) { }
+  categories: Array<Category>;
 
-  ngOnInit(): void {
-    this.entryService.getAll().subscribe(
-      // Ordenar entradas pelo id (novos lançamentos ficam em cima)
-      entries => this.entries = entries.sort((a, b) => b.id - a.id),
-      error => alert('Erro ao carregar a lista')
+  imaskConfig = {
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: '',
+    padFractionalZeros: true,
+    normalizeZeros: true,
+    radix: ','
+  };
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+    monthNames: [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+      'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar'
+  }
+
+  constructor(
+    protected entryService: EntryService,
+    protected categoryService: CategoryService,
+    protected injector: Injector
+  ) {
+    super(injector, new Entry(), entryService, Entry.fromJson)
+  }
+
+  ngOnInit() {
+    this.loadCategories();
+    super.ngOnInit();
+  }
+
+  get typeOptions(): Array<any> {
+    return Object.entries(Entry.types).map(
+      ([value, text]) => {
+        return {
+          text: text,
+          value: value
+        }
+      }
     )
   }
 
-  deleteEntry(entry) {
-    const mustDelete = confirm('Deseja realmente excluir este item?');
 
-    if (mustDelete){
-      this.entryService.delete(entry.id).subscribe(
-        () => this.entries = this.entries.filter(element => element != entry),
-        () => alert("Erro ao tentar excluir!")
-      )
-    }
+  protected buildResourceForm() {
+    this.resourceForm = this.formBuilder.group({
+      id: [null],
+      name: [null, [Validators.required, Validators.minLength(2)]],
+      description: [null],
+      type: ['expense', [Validators.required]],
+      amount: [null, [Validators.required]],
+      date: [null, [Validators.required]],
+      paid: [true, [Validators.required]],
+      categoryId: [null, [Validators.required]]
+    });
   }
 
+  private loadCategories() {
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories
+    );
+  }
+
+  protected creationPageTitle(): string {
+    return 'Cadastro de Novo Lançamento';
+  }
+
+  protected editionPageTitle(): string {
+    const resourceName = this.resource.name || '';
+    return 'Editando Lançamento: ' + resourceName;
+  }
 }
