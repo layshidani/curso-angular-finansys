@@ -451,6 +451,31 @@ app
       |_base-resource.service.ts
 ```
 
+## Shared Components
+
+```
+|_src
+  |_app
+    |_shared
+      |_components
+        |_base-resource-form
+          |_base-resource-form.component.ts
+        |_base-resource-list
+          |_base-resource-list.component.ts
+        |_bread-crumb
+          |_bread-crumb.component.ts
+          |_bread-crumb.component.html
+          |_bread-crumb.component.css
+        |_form-field-error
+          |_form-field-error.component.ts
+          |_form-field-error.component.html
+          |_form-field-error.component.css
+        |_page-header
+          |_page-header.component.ts
+          |_page-header.component.html
+          |_page-header.component.css
+```
+
 ### Anotações
 
 ```ts
@@ -565,4 +590,32 @@ create(entry: Entry): Observable<Entry> {
       catchError(this.handleError)
     );
   }
+```
+
+## angular cli inline template
+
+```bash
+ng g c shared/components/form-field-error --inline-template
+```
+
+o comando `--inline-template` irá gerar o template direto no arquivo `.ts` do componente ao invés de gerar um arquivo html a parte.
+
+```ts
+import { Component, OnInit, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-form-field-error',
+  template: `
+    <p class='text-danger'>
+      {{errorMessage}}
+    </p>
+  `,
+  styleUrls: ['./form-field-error.component.css']
+})
+export class FormFieldErrorComponent implements OnInit {
+  constructor() { }
+
+  ngOnInit() {
+  }
+}
 ```
