@@ -619,3 +619,19 @@ export class FormFieldErrorComponent implements OnInit {
   }
 }
 ```
+
+## Reports
+
+```
+|_pages
+  |_categories
+  |_entries
+  |_reports
+    |_reports
+      |_reports.component.html
+      |_reports.component.css
+      |_reports.component.ts
+      |_reports.component.spec.ts
+    |_reports-routing.module.ts
+    |_reports.module.ts
+  ```
