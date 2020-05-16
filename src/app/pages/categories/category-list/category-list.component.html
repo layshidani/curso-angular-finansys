@@ -1,39 +1,25 @@
-<nav class="mb-5 mt-5">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a router-link='/'>Home</a></li>
-    <li class="breadcrumb-item active">Categorias</li>
-  </ol>
-</nav>
+<app-bread-crumb [items]="[{text: 'Categorias'}]"></app-bread-crumb>
 
-<div class="row mb-4">
-  <div class="col-md">
-    <!-- pl = padding left -->
-    <h1 class="h2 border-left pl-2">Categorias</h1>
-  </div>
-    <a class="btn btn-success float-right" routerLink="new">+ Nova Categoria</a>
-  <div class="col-md">
-  </div>
-</div>
+<app-page-header page-title="Categorias" button-text="+ Nova Categoria" button-link="new" button-class="btn-success">
+</app-page-header>
+
 
 <table class="table table-hover">
   <thead>
     <tr class="bg-primary text-light">
-      <th>Categorias</th>
+      <th>Categoria</th>
       <th>Ações</th>
     </tr>
   </thead>
   <tbody>
-    <!-- torna dinâmico com as info do banco de dados -->
-    <tr *ngFor="let category of categories">
+    <tr *ngFor="let category of resources">
       <td>
-        <strong>{{ category.name }}</strong><br>
-        <small>{{ category.description }}</small>
+        <strong>{{category.name}}</strong><br>
+        <small>{{category.description}}</small>
       </td>
       <td>
-        <!-- [routerLink] propertyBind -->
-        <a [routerLink]="[ category.id, 'edit' ]" class="btn btn-outline-info btn-sm mr-2">Editar</a>
-        <!-- add click -->
-        <button (click)="deleteCategory(category)" class="btn btn-outline-danger btn-sm">Excluir</button>
+        <a [routerLink]="[category.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <button (click)="deleteResource(category)" class="btn btn-outline-danger btn-sm">Excluir</button>
       </td>
     </tr>
   </tbody>
