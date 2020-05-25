@@ -44,5 +44,4 @@ export class FormFieldErrorComponent implements OnInit {
       return `Deve ter no máximo ${requiredLength} caracteres`;
     }
   }
-
 }
